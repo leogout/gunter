@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+   <div class="row">
+        {% for category_recap in category_recaps %}
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">{{ category_recap.get_name() }}</span>
+                        <div class="{{ 'red-text' if category_recap.get_percentage() >= 100 else '' }}">
+                            {{ category_recap.get_price() | round | int }} €
+                            sur {{ category_recap.get_budget() | round  | int }} ({{ category_recap.get_percentage() }}%)
+                        </div>
+                        <div class="progress indigo accent-1">
+                            <div class="determinate indigo darken-1"
+                                 style="width: {{ category_recap.get_percentage() }}%"></div>
+                        </div>
+
+                        {% for purchase in category_recap.purchases %}
+                            <div>
+                                {{ purchase.date.strftime('%A %d %B') }} : {{ "%.2f"|format(purchase.price) }} €
+                                <a href="{{ url_for('remove', id=purchase.id) }}">Supprimer</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <form action="" method="post">
+    <div class="row">
+      <div class="input-field col s12 m6">
+        {% for choice in form.category.field.choices %}
+          <p>
+            <label>
+              <input type="radio" style="width: 100%;" value="{{ choice.0 }}" name="{{ form.category.html_name }}" {% if forloop.counter == 1 %}checked{% endif %}/>
+              <span>{{ choice.1 }}</span>
+            </label>
+          </p>
+        {% endfor %}
+      </div>
+      <div class="input-field col s12 m6">
+        {{ form.price }}
+        <label>Prix</label>
+      </div>
+
+      {% csrf_token %}
+
+      <div class="center-align">
+        <button class="btn waves-effect waves-light indigo darken-1" type="submit" name="action">Envoyer
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div id="depenses"></div>
+  <div id="total"></div>
+
+  <div class="row">
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">Achats</span>
+          {% for purchase in purchases %}
+            <div>
+              <i>{{ purchase.date|date:'d M à H:i' }}</i> <b>{{ purchase.price }} €</b> en {{ purchase.category }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block js %}
+  {{ block.super }}
+  <script>
+    var data = [
+      {
+        x: {{ plot.x|safe }},
+        y: {{ plot.y|safe }},
+        type: 'bar',
+        marker: {
+          color: {{ plot.colors|safe }}
+        }
+      }
+    ];
+
+    var limits =
+    {{ plot.limits|safe }}.map((limit, i) => {
+      return {
+        type: 'line',
+        x0: -0.45 + i,
+        y0: limit,
+        x1: i + 0.45,
+        y1: limit,
+        line: {
+          color: 'rgb(255, 0, 0)',
+          width: 2,
+        }
+      }
+    });
+
+    Plotly.newPlot('depenses', data, {
+      shapes: limits
+    });
+  </script>
+  <script>
+    var traces = [];
+    {% for xyc in plot.xyc %}
+      traces.push({
+        x: ['Total'],
+        y: [{{ xyc.1|safe }}],
+        name: '{{ xyc.0|safe }}',
+        type: 'bar',
+        marker: {
+          color: '{{ xyc.2|safe }}'
+        }
+      });
+    {% endfor %}
+
+    Plotly.newPlot('total', traces, {
+      barmode: 'stack',
+      shapes: [{
+        type: 'line',
+        x0: -0.45,
+        y0: {{ plot.total_limits|safe }},
+        x1: 0.45,
+        y1: {{ plot.total_limits|safe }},
+        line: {
+          color: 'rgb(255, 0, 0)',
+          width: 2,
+        }
+      }]
+    });
+
+  </script>
+{% endblock %}

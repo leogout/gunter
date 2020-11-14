@@ -1,0 +1,4 @@
+.idea/
+db.cnf
+venv/
+*.sqlite3
