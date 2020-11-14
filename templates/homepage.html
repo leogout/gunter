@@ -6,9 +6,9 @@
       <div class="input-field col s12 m6">
         {% for choice in form.category.field.choices %}
           <p>
-            <label>
-              <input type="radio" style="width: 100%;" value="{{ choice.0 }}" name="{{ form.category.html_name }}" {% if forloop.counter == 1 %}checked{% endif %}/>
-              <span>{{ choice.1 }}</span>
+            <label class="fullwidth">
+              <input type="radio" value="{{ choice.0 }}" name="{{ form.category.html_name }}" {% if forloop.counter == 1 %}checked{% endif %}/>
+              <span class="fullwidth">{{ choice.1 }}</span>
             </label>
           </p>
         {% endfor %}
@@ -59,8 +59,7 @@
       }
     ];
 
-    var limits =
-    {{ plot.limits|safe }}.map((limit, i) => {
+    var limits = {{ plot.limits|safe }}.map((limit, i) => {
       return {
         type: 'line',
         x0: -0.45 + i,
