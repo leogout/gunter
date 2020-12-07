@@ -31,7 +31,7 @@ def homepage(request):
 
     purchases = Purchase.objects.filter(date__year=year, date__month=month).order_by('-date')
     x = [category.name for category in categories]
-    y = [category.total_in_month(today.month, today.year) for category in categories]
+    y = [category.total_in_month(month, year) for category in categories]
     limits = [category.limit for category in categories]
     colors = [category.color for category in categories]
 
