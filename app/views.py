@@ -23,24 +23,24 @@ def homepage(request):
             purchase.save()
 
     form = PurchaseForm()
-
     categories = Category.objects.all()
-
     today = datetime.date.today()
 
-    purchases = Purchase.objects.filter(date__year=today.year, date__month=today.month).order_by('-date')
+    month = request.GET.get('month', today.month)
+    year = request.GET.get('year', today.year)
+
+    purchases = Purchase.objects.filter(date__year=year, date__month=month).order_by('-date')
     x = [category.name for category in categories]
     y = [category.total_in_month(today.month, today.year) for category in categories]
     limits = [category.limit for category in categories]
     colors = [category.color for category in categories]
-
-
 
     return render(
         request,
         'homepage.html',
         {
             'form': form,
+            'today': today,
             'categories': categories,
             'purchases': purchases,
             'plot': {
@@ -53,3 +53,6 @@ def homepage(request):
             }
         }
     )
+
+
+

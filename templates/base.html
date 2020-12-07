@@ -24,7 +24,7 @@
   <div class="nav-wrapper container">
     <a href="{% url 'homepage' %}" class="brand-logo">Gunter</a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
-      <li><a href="{% url 'homepage' %}">Recap</a></li>
+      <li><a href="{% url 'homepage' %}?month={{ today.month|add:"-1" }}">Mois précédent</a></li>
       <li><a href="{% url 'homepage' %}">Budgets</a></li>
     </ul>
   </div>
